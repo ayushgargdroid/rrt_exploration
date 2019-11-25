@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 
-#--------Include modules---------------
+#--------Include modules-----------------------------
+
 from copy import copy
 import rospy
 from nav_msgs.msg import OccupancyGrid
@@ -18,7 +19,6 @@ def getfrontier(mapData):
 	resolution=mapData.info.resolution
 	Xstartx=mapData.info.origin.position.x
 	Xstarty=mapData.info.origin.position.y
-	 
 	img = np.zeros((h, w, 1), np.uint8)
 	
 	for i in range(0,h):
@@ -28,10 +28,8 @@ def getfrontier(mapData):
 			elif data[i*w+j]==0:
 				img[i,j]=255
 			elif data[i*w+j]==-1:
-				img[i,j]=205
-	
-	
-       	o=cv2.inRange(img,0,1)
+				img[i,j]=205	
+		o=cv2.inRange(img,0,1)
 	edges = cv2.Canny(img,0,255)
 	im2, contours, hierarchy = cv2.findContours(o,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
 	cv2.drawContours(o, contours, -1, (255,255,255), 5)
@@ -62,9 +60,5 @@ def getfrontier(mapData):
 				if len(all_pts)>0:
 					all_pts=np.vstack([all_pts,pt])
 				else:
-							
 					all_pts=pt
-	
 	return all_pts
-
-

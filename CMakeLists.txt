@@ -15,7 +15,6 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
 )
 
-
 add_message_files(
   FILES
   PointArray.msg
@@ -27,15 +26,9 @@ generate_messages(
   geometry_msgs
 )
 
-
 catkin_package( 
-
-CATKIN_DEPENDS message_runtime
+  CATKIN_DEPENDS message_runtime
 )
-
-
-
-
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 

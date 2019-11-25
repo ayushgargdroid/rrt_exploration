@@ -25,20 +25,20 @@ else{return 1.0;}
 //Nearest function
 std::vector<float> Nearest(  std::vector< std::vector<float>  > V, std::vector<float>  x){
 
-float min=Norm(V[0],x);
-int min_index;
-float temp;
-
-for (int j=0;j<V.size();j++)
-{
-temp=Norm(V[j],x);
-if (temp<=min){
-min=temp;
-min_index=j;}
-
-}
-
-return V[min_index];
+  float min=Norm(V[0],x);
+  int min_index;
+  float temp;
+  
+  for (int j=0;j<V.size();j++)
+  {
+    temp=Norm(V[j],x);
+    if (temp<=min){
+      min=temp;
+      min_index=j;
+    }
+  
+  }
+  return V[min_index];
 }
 
 
@@ -126,44 +126,3 @@ char out=0;
  
 
  }
- 
-
-
-     
-   
-
-
-  
- 
- 
- 
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
