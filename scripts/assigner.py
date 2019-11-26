@@ -76,8 +76,6 @@ def node():
     robots[i].sendGoal(robots[i].getPosition(),False)
 
   listener = tf.TransformListener()
-  prev_winner_id = -1
-  prev_centroid = [0,0]
 #-------------------------------------------------------------------------
 #---------------------     Main   Loop     -------------------------------
 #-------------------------------------------------------------------------
@@ -154,17 +152,12 @@ def node():
 
     if (len(id_record)>0):
       winner_id=revenue_record.index(max(revenue_record))
-      print('Prev:{} Curr:{}'.format(prev_centroid,centroid_record[winner_id]))
-      if(prev_winner_id != winner_id and prev_centroid[0] != centroid_record[winner_id][0] and prev_centroid[1] != centroid_record[winner_id][1]):
-        robots[id_record[winner_id]].cancelAllGoals()
-        if((centroid_record[winner_id][0] - trans[0]) < 0.2 and (centroid_record[winner_id][1] - trans[1]) < 0.2):
-          robots[id_record[winner_id]].sendGoal(centroid_record[winner_id],True)
-        else:  
-          robots[id_record[winner_id]].sendGoal(centroid_record[winner_id],False)
-        rospy.loginfo(namespace+"  assigned to  "+str(centroid_record[winner_id]))	
-        prev_winner_id = winner_id
-        prev_centroid = centroid_record[winner_id]
-        rospy.sleep(delay_after_assignement)
+      if((centroid_record[winner_id][0] - trans[0]) < 0.2 and (centroid_record[winner_id][1] - trans[1]) < 0.2):
+        robots[id_record[winner_id]].sendGoal(centroid_record[winner_id],True)
+      else:  
+        robots[id_record[winner_id]].sendGoal(centroid_record[winner_id],False)
+      rospy.loginfo(namespace+"  assigned to  "+str(centroid_record[winner_id]))
+      rospy.sleep(delay_after_assignement)
 #------------------------------------------------------------------------- 
     rate.sleep()
 #-------------------------------------------------------------------------
