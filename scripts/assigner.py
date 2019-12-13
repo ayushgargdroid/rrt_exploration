@@ -153,17 +153,17 @@ def node():
     # loading the ar_marker tf listener
     trans_ar = [0, 0, 0]
     try:
-      (trans_ar, rot_ar) = listener.lookupTransform('odom', 'ar_marker/4000', rospy.Time(0))
+      (trans_ar, rot_ar) = listener.lookupTransform('/odom', '/ar_marker/4000', rospy.Time(0))
       rospy.loginfo('Found Marker')
     except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-      continue
+      pass
     
     if (len(id_record)>0):
       winner_id=revenue_record.index(max(revenue_record))
-      # if(trans_ar!=[0,0,0] and (robots[id_record[winner_id]].getPosition()[0] - trans_ar[0] > 0.2) and (robots[id_record[winner_id]].getPosition()[1] - trans_ar[1] > 0.2)):
-      #   robots[id_record[winner_id]].sendGoal([t - 0.2 for t in trans_ar], False)
-      #   rospy.loginfo(namespace +"  assigned to ar_transformation "+str(trans_ar))
-      if((centroid_record[winner_id][0] - trans[0]) < 0.2 and (centroid_record[winner_id][1] - trans[1]) < 0.2):
+      if(trans_ar!=[0,0,0] and (robots[id_record[winner_id]].getPosition()[0] - trans_ar[0] > 0.2) and (robots[id_record[winner_id]].getPosition()[1] - trans_ar[1] > 0.2)):
+        robots[id_record[winner_id]].sendGoal([t - 0.2 for t in trans_ar], False)
+        rospy.loginfo(namespace +"  assigned to ar_transformation "+str(trans_ar))
+      elif((centroid_record[winner_id][0] - trans[0]) < 0.2 and (centroid_record[winner_id][1] - trans[1]) < 0.2):
         robots[id_record[winner_id]].sendGoal(centroid_record[winner_id],True)
       else:  
         robots[id_record[winner_id]].sendGoal(centroid_record[winner_id],False)
