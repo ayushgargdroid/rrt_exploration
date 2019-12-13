@@ -41,5 +41,5 @@
     <param name="delay_after_assignement" value="0.5"/>
     <param name="rate" value="10"/>
   </node>
-  
+ 
 </launch>

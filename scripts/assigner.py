@@ -139,24 +139,34 @@ def node():
           centroid_record.append(centroids[ip])
           id_record.append(ir)
         
-    if (len(centroid_record) != 0):
-      rospy.loginfo("revenue record: "+str(revenue_record))	
-      rospy.loginfo("centroid record: "+str(centroid_record))	
-      rospy.loginfo("robot IDs record: "+str(id_record))	
+    # if (len(centroid_record) != 0):
+    #   rospy.loginfo("revenue record: "+str(revenue_record))	
+    #   rospy.loginfo("centroid record: "+str(centroid_record))	
+    #   rospy.loginfo("robot IDs record: "+str(id_record))	
         
 #-------------------------------------------------------------------------	
     try:
       (trans,rot) = listener.lookupTransform('/map', '/base_link', rospy.Time(0))
     except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
       continue
-
+      
+    # loading the ar_marker tf listener
+    trans_ar = [0, 0, 0]
+    try:
+      (trans_ar, rot_ar) = listener.lookupTransform('odom', 'ar_marker/4000', rospy.Time(0))
+      rospy.loginfo('Found Marker')
+    except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+      continue
     if (len(id_record)>0):
       winner_id=revenue_record.index(max(revenue_record))
-      if((centroid_record[winner_id][0] - trans[0]) < 0.2 and (centroid_record[winner_id][1] - trans[1]) < 0.2):
+      if trans_ar != [0, 0, 0] and (robots[id_record[winner_id]].getPosition()[0] - trans_ar[0] > 0.2) and (robots[id_record[winner_id]].getPosition()[1] - trans_ar[1] > 0.2):
+        robots[id_record[winner_id]].sendGoal([t - 0.2 for t in trans_ar], True)
+        rospy.loginfo(namespace +"  assigned to ar_transformation "+str(trans_ar))
+      elif((centroid_record[winner_id][0] - trans[0]) < 0.2 and (centroid_record[winner_id][1] - trans[1]) < 0.2):
         robots[id_record[winner_id]].sendGoal(centroid_record[winner_id],True)
       else:  
         robots[id_record[winner_id]].sendGoal(centroid_record[winner_id],False)
-      rospy.loginfo(namespace+"  assigned to  "+str(centroid_record[winner_id]))
+      rospy.loginfo(namespace +"  assigned to  "+str(centroid_record[winner_id]))
       rospy.sleep(delay_after_assignement)
 #------------------------------------------------------------------------- 
     rate.sleep()
